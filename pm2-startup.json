@@ -2,7 +2,10 @@
   "apps": [
     {
       "name": "TVMazeCrawler",
-      "script": "build/server.js"
+      "script": "build/server.js",
+      "env": {
+        "PORT": 9999
+      }
     }
   ]
 }
