@@ -19,8 +19,12 @@ TVMazeShowSchema.set('toJSON', {
     transform: function (doc, ret, options) {
         delete ret._id;
         delete ret.__v;
+        ret.id = ret.tvmazeid;
+        delete ret.tvmazeid;
         return ret
     }
 });
+
+TVMazeShowSchema.index({ tvmazeid: 1 });
 
 export const TVMazeShowModel = mongoose.model('TVMazeShow', TVMazeShowSchema);

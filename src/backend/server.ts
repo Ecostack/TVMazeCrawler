@@ -6,27 +6,10 @@ import * as mongoose from 'mongoose';
 // import * as connectMongo from 'connect-mongo';
 // import * as session from 'express-session';
 // import * as passport from "passport";
-import * as path from 'path';
-import {TVMazeShowModel} from "./models/TVMazeShowModel";
+const Agendash = require('agendash');
+import Config from "./config";
+import {TVMazeCrawlerService} from "./services/TVMazeAPI/TVMazeCrawlerService";
 import {AgendaJobsService} from "./services/AgendaJobsService";
-
-export class Config {
-    public static MONGO_URL = "mongodb://localhost:27017/tvmazecrawler"
-    public static SESSION = {
-        store: null,
-        secret: 'dkhy2hd2d',
-        cookie: {
-            secure: false,
-            httpOnly: false,
-            maxAge: 30 * 24 * 60 * 60 * 1000
-        },
-        resave: false,
-        saveUninitialized: false,
-    }
-    public static SERVER_PORT = 3000;
-
-    public static JWT_TOKEN_SECRET = 'G78SVamkozCZxug5fsVdrZ2XGPi4NbBKGheBbgSy';
-}
 
 
 export class Server {
@@ -46,27 +29,16 @@ export class Server {
 
     public async setup() {
         if (this.init != true) {
+            this.init = true;
             this.server = express();
-            this.setupMiddleware();
-            this.setupConnections();
-            this.routes();
-            this.setupFrontend();
+            await this.setupMiddleware();
+            await this.setupConnections();
+            await this.routes();
             await this.afterSetup();
 
             this.server.listen(this.port);
             console.log(`Server listening at http://localhost:${this.port}`);
         }
-    }
-
-    private setupFrontend() {
-        this.server.set('view engine', 'pug');
-
-        this.server.use(express.static(path.join(__dirname, '../dist')));
-        this.server.set('views', path.join(__dirname, '/../src/client'));
-
-        this.server.get('/*', function (req, res) {
-            res.render('index');
-        });
     }
 
     private setupMiddleware() {
@@ -80,36 +52,19 @@ export class Server {
     private setupConnections() {
         mongoose.connect(Config.MONGO_URL);
 
-        // const MongoStore = connectMongo(session);
-
-        // const SessionStore = new MongoStore({
-        //     mongooseConnection: mongoose.connection
-        // });
-        // global['SessionStore'] = SessionStore;
-        // Config.session.store = SessionStore;
-        //
-        // this.server.use(session(Config.session));
-        // this.server.use(passport.initialize());
-        // this.server.use(passport.session());
-        // PassportService.initiateStrategies(passport);
-        // global['Passport'] = passport;
-
     }
 
-    private routes() {
+    private async routes() {
         const router = express.Router();
-        // UserRoute.create(router);
-        // NoteRoute.create(router);
-        // TaxonomyRoute.create(router);
-        // AuthRoute.create(router);
-        TVMazeShowModel.create(router);
+        TVMazeShowRouter.create(router);
         this.server.use(`/api`, router);
+        this.server.use(`/dash`, Agendash(await AgendaJobsService.getInstance()))
     }
 
-    private afterSetup() {
-        AgendaJobsService.getInstance()
+    private async afterSetup() {
+        await TVMazeCrawlerService.setupAgendaBased();
+        await AgendaJobsService.getInstance().then(instance => instance.now(TVMazeCrawlerService.AGENDA_JOB_NAME))
     }
 }
 
-
-Server.getInstance();
+Server.getInstance().setup()

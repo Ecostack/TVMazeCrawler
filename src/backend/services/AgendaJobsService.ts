@@ -1,17 +1,27 @@
 import * as agendaModule from 'agenda';
-import {Config} from "../server";
+import Config from "../config";
 
 export class AgendaJobsService {
-    private static AGENDA_INSTANCE = new agendaModule({ db: { address: Config.MONGO_URL } });
+    private static AGENDA_INSTANCE = new agendaModule({db: {address: Config.MONGO_URL}});
     private static init = false;
 
-    public static async getInstance () {
+    public static async getInstance() {
         if (this.init != true) {
-            await this.AGENDA_INSTANCE.start();
             this.init = true;
+            await this.AGENDA_INSTANCE.start();
+            // process.on('SIGTERM', this.graceful(this.AGENDA_INSTANCE));
+            // process.on('SIGINT', this.graceful(this.AGENDA_INSTANCE));
         }
         return AgendaJobsService.AGENDA_INSTANCE;
     };
+
+    // private static graceful(instance) {
+    //     return () => {
+    //         instance.stop(function () {
+    //             process.exit(0);
+    //         });
+    //     }
+    // }
 
     public static define = async (
         name: string,
