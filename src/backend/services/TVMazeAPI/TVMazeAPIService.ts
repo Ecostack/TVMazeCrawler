@@ -1,14 +1,7 @@
 import InterfaceTVMazeAPIShowResponse = TVMazeAPIShowResponse.InterfaceTVMazeAPIShowResponse;
 import InterfaceTVMazeAPIShowCastResponse = TVMazeAPIShowCastResponse.InterfaceTVMazeAPIShowCastResponse;
 
-
 const requestPromise = require('request-promise');
-
-export enum TVMazeAPIResponse {
-    WORKED = 'WORKED',
-    REQUEST_LIMIT_REACHED = 'REQUEST_LIMIT_REACHED',
-    NOT_FOUND_ERROR = 'NOT_FOUND_ERROR'
-}
 
 export class TVMazeAPIService {
 

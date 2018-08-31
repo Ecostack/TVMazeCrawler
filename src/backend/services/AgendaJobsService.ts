@@ -9,19 +9,9 @@ export class AgendaJobsService {
         if (this.init != true) {
             this.init = true;
             await this.AGENDA_INSTANCE.start();
-            // process.on('SIGTERM', this.graceful(this.AGENDA_INSTANCE));
-            // process.on('SIGINT', this.graceful(this.AGENDA_INSTANCE));
         }
         return AgendaJobsService.AGENDA_INSTANCE;
     };
-
-    // private static graceful(instance) {
-    //     return () => {
-    //         instance.stop(function () {
-    //             process.exit(0);
-    //         });
-    //     }
-    // }
 
     public static define = async (
         name: string,
