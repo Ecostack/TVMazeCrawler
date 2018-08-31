@@ -99,11 +99,10 @@ export class TVMazeCrawlerService {
         return this.executeForPageId({job, page, lastShowId})
     }
 
-
     public static async setupAgendaBased() {
         return AgendaJobsService.define(
             this.AGENDA_JOB_NAME,
-            '60 minute',
+            '5 minute',
             async (job: any,done:any) => {
                 (async () => {
                     await this.runForPage(async () => {

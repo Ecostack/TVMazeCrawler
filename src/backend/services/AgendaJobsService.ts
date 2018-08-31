@@ -13,21 +13,18 @@ export class AgendaJobsService {
         return AgendaJobsService.AGENDA_INSTANCE;
     };
 
-    public static define = async (
+    public static async define(
         name: string,
         time: string,
         cb: (job: any, done: () => void) => any,
         options?: { lockLifetime?: number; concurrency?: number }
-    ) => {
+    ) {
         const instance = await AgendaJobsService.getInstance();
         const defineOptions = options || {};
         if (defineOptions.lockLifetime == null) {
             defineOptions.lockLifetime = 5 * 60 * 1000;
         }
         instance.define(name, defineOptions, cb);
-        instance.on('ready', () => {
-            instance.every(time, name);
-            instance.start();
-        });
+        return instance.every(time, name);
     };
 }

@@ -60,7 +60,6 @@ export class Server {
 
     private async afterSetup() {
         await TVMazeCrawlerService.setupAgendaBased();
-        await AgendaJobsService.getInstance().then(instance => instance.now(TVMazeCrawlerService.AGENDA_JOB_NAME))
     }
 }
 
