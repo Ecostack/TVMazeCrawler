@@ -1,21 +1,33 @@
 # TVMazeCrawler
+This project crawles the available shows on the TV Maze API, their casts and makes it available via a public API.
 
-### Api available
+## Motiviation
+This project has been written for an assignment.
 
-/api/tvshows [offset(default 0),limit(default 20)]
-
-### Required tooling
+## Required tooling
 
 Mongo database on port 27017.
 
 Mongo URL is configurable with the environment variable *MONGO_URL*.
 
-### Startup
+## Startup
 
 Test: **yarn start**
 
 Production: **pm2 start pm2-startup.json**
 
-### Api being used
+## Api available
 
-https://tvcrawler.techstack.de/api
+/api/tvshows [offset(default 0),limit(default 20)]
+
+## Tech/Frameworks used
+<b>Built with</b>
+- [Express.js](https://expressjs.com)
+- [Agenda](https://agendajs.com)
+- [Mongoose](https://mongoosejs.com/)
+- [TV Maze API](https://tvcrawler.techstack.de/api)
+
+## License
+GNU GPL, see license file
+
+
